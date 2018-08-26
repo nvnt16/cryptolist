@@ -46,7 +46,7 @@ App = {
   },
 
   initContract: function() {
-    $.getJSON('CryptoList.json', function(cryptoListArtifact) {
+    $.getJSON('./build/contracts/CryptoList.json', function(cryptoListArtifact) {
       // Get the necessary contract artifact file and use it to instantiate a truffle contract abstraction.
       App.contracts.CryptoList = TruffleContract(cryptoListArtifact);
 
