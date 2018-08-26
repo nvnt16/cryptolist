@@ -1,0 +1,27 @@
+{
+  "name": "cryptolist",
+  "version": "1.0.0",
+  "description": "A Craigslist clone on Ethereum Blockchain.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "lite-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nvnt16/cryptolist.git"
+  },
+  "keywords": [
+    "Ethereum",
+    "dApp",
+    "Craigslist"
+  ],
+  "author": "Navneet Raghuvanshi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nvnt16/cryptolist/issues"
+  },
+  "homepage": "https://github.com/nvnt16/cryptolist#readme",
+  "devDependencies": {
+    "lite-server": "^2.4.0"
+  }
+} 
