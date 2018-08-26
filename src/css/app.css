@@ -1,9 +1,33 @@
 body {
   padding-top: 40px;
+  background: darkgrey !important;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.card {
+  background: darkgrey !important;
+  text-align: center;
 }
 
 .welcome {
   font-size: 18px;
   display: inline;
   padding: 5px;
+}
+
+.items {
+  background: darkgrey !important;
+  padding-left: 15px;
+}
+
+.sell {
+  padding-left: 20px;
+}
+
+.event {
+  padding-left: 0px;
+}
+
+.footer {
+  background: grey !important;
 }
