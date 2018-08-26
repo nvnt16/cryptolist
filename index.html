@@ -73,7 +73,7 @@
                 </div>
               </form>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-success" data-dismiss="modal" onclick="App.sellItem(); return false;">Submit</button>
+                <button type="button" class="btn btn-primary btn-success" data-dismiss="modal" onclick="App.sellItem(); App.clearSubmitForm(); return false;">Submit</button>
                 <button type="button" class="btn" data-dismiss="modal">Close</button>
               </div>
             </div>
@@ -108,6 +108,7 @@
       </div>
     </div>
   </div>
+  <div id="snackbar">Confirm transaction and check item listing!!!</div>
   <div id="footer" class="container">
     <nav class="footer navbar navbar-default navbar-fixed-bottom">
       <div class="navbar-inner navbar-content-center text-center">
