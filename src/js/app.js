@@ -84,7 +84,6 @@ App = {
       for (var i = itemIds.length; i >= 0; i--) {
         var itemId = itemIds[i];
         cryptoListInstance.items(itemId).then(function (item) {
-          console.log(item);
           App.displayItem(
             item[0],
             item[1],
@@ -97,7 +96,6 @@ App = {
       }
       App.loading = false;
     }).catch(function (err) {
-      console.log(err.message);
       App.loading = false;
     });
   },
@@ -150,7 +148,6 @@ App = {
         reader.onloadend = function () {
           var buf = buffer.Buffer(reader.result);
           App.ipfs.files.add(buf, (err, result) => {
-            console.log(result);
             $("#previewContainer").attr("src", "https://" + App.ipfsProvider + "/ipfs/" + result[0].hash);
             $("#previewContainer").attr('data-id', result[0].hash);
             hash = result[0].hash;
@@ -174,6 +171,7 @@ App = {
       // nothing to sell
       return false;
     }
+    App.clearSubmitForm();
     App.contracts.CryptoList.deployed().then(function (instance) {
       return instance.sellItem(_item_name, _description, _price, $("#previewContainer").attr('data-id'), {
         from: App.account,
@@ -187,7 +185,8 @@ App = {
   },
 
   clearSubmitForm: function () {
-    //App.imageUpload.val('');
+    $("#imageUpload").val('');
+    $("#previewContainer").attr('src', '');
     $("#item_name").val('');
     $("#item_description").val('');
     $("#item_price").val('');
