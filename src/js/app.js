@@ -5,6 +5,7 @@ App = {
   contracts: {},
   account: 0x0,
   loading: false,
+  imageUpload: $("#imageUpload"),
 
   init: function () {
     return App.initWeb3();
@@ -25,8 +26,9 @@ App = {
         'http://localhost:8545');
       web3 = new Web3(App.web3Provider);
     }
+    App.initIPFS();
     App.displayAccountInfo();
-    //App.initIPFS();
+    App.uploadImage();
     return App.initContract();
   },
 
@@ -54,11 +56,11 @@ App = {
       App.contracts.CryptoList.setProvider(App.web3Provider);
 
       // Listen for events
-      App.listenToEvents();
-
+      App.reloadItems();
       // Retrieve the item from the smart contract
-      return App.reloadItems();
+      return App.listenToEvents();
     });
+
   },
 
   reloadItems: function () {
@@ -67,9 +69,7 @@ App = {
       return;
     }
     App.loading = true;
-
     // refresh account information because the balance may have changed
-    App.displayAccountInfo();
 
     var cryptoListInstance;
 
@@ -81,15 +81,17 @@ App = {
       var itemsRow = $('#itemsRow');
       itemsRow.empty();
 
-      for (var i = 0; i < itemIds.length; i++) {
+      for (var i = itemIds.length; i >= 0; i--) {
         var itemId = itemIds[i];
         cryptoListInstance.items(itemId).then(function (item) {
+          console.log(item);
           App.displayItem(
             item[0],
             item[1],
             item[3],
             item[4],
-            item[5]
+            item[5],
+            item[6]
           );
         });
       }
@@ -100,19 +102,30 @@ App = {
     });
   },
 
-  displayItem: function (id, seller, name, description, price) {
+  openImage: function (ipfshash) {
+    var ipfsURL = "https://" + App.ipfsProvider + "/ipfs/" + ipfshash;
+    window.open(ipfsURL, '_blank');
+  },
+
+  displayItem: function (id, seller, name, description, price, ipfsHash) {
     // Retrieve the item placeholder
+    if(ipfsHash == "" || $.trim(ipfsHash).length < 46 ) {
+      ipfsHash = "QmdrA4mUBg6bKnhhkTXBkbpEfEeqwTZLdBwi11Hx9Q5VhF";
+    }
     var itemsRow = $('#itemsRow');
 
     var etherPrice = web3.fromWei(price, "ether");
-
+    var ipfsUrl = "https://" + App.ipfsProvider + "/ipfs/" + ipfsHash;
     // Retrieve and fill the item template
     var itemTemplate = $('#itemTemplate');
     itemTemplate.find('.panel-title').text(name);
+    itemTemplate.find("#uploadedImage").attr("src", ipfsUrl);
+    itemTemplate.find("#uploadedImage").attr("onclick", 'App.openImage(' + '"' + ipfsHash + '"' + ')');
     itemTemplate.find('.item-description').text(description);
     itemTemplate.find('.item-price').text(etherPrice + " ETH");
-    itemTemplate.find('.btn-buy').attr('data-id', id);
-    itemTemplate.find('.btn-buy').attr('data-value', etherPrice);
+    itemTemplate.find('.btn-buy').attr('onclick', 'App.buyItem(' + id  + ',' + etherPrice + ')');
+    // itemTemplate.find('.btn-buy').attr('data-id', id);
+    // itemTemplate.find('.btn-buy').attr('data-value', etherPrice);
 
     // seller?
     if (seller == App.account) {
@@ -129,20 +142,18 @@ App = {
 
   uploadImage: function () {
     //image upload logic
-    var _ipfsHash = $("#imageUpload");
-    _ipfsHash.on("click", function () {
-      if (_ipfsHash[0].files.length != 0) {
-        console.log("inside if");
+    $("#imageUpload").on("change", function () {
+      if ($("#imageUpload")[0].files.length != 0) {
         $.LoadingOverlay("show");
         let reader = new FileReader();
-        reader.readAsArrayBuffer(_ipfsHash[0].files[0]);
+        reader.readAsArrayBuffer($("#imageUpload")[0].files[0]);
         reader.onloadend = function () {
           var buf = buffer.Buffer(reader.result);
           App.ipfs.files.add(buf, (err, result) => {
             console.log(result);
-            previewContainer.attr("src", "https://" + App.ipfsProvider + "/ipfs/" + result[0].hash);
+            $("#previewContainer").attr("src", "https://" + App.ipfsProvider + "/ipfs/" + result[0].hash);
+            $("#previewContainer").attr('data-id', result[0].hash);
             hash = result[0].hash;
-
             $.LoadingOverlay("hide");
           });
         }
@@ -153,19 +164,18 @@ App = {
 
   sellItem: function () {
     // retrieve details of the item
-    //var _ipfsHash = $("#imageUpload");
     var _item_name = $("#item_name").val();
     var _description = $("#item_description").val();
     var _price = web3.toWei(parseFloat($("#item_price").val() || 0),
       "ether");
 
-    
+
     if ((_item_name.trim() == '') || (_price == 0)) {
       // nothing to sell
       return false;
     }
     App.contracts.CryptoList.deployed().then(function (instance) {
-      return instance.sellItem(_item_name, _description, _price, "", {
+      return instance.sellItem(_item_name, _description, _price, $("#previewContainer").attr('data-id'), {
         from: App.account,
         gas: 500000
       });
@@ -212,12 +222,11 @@ App = {
     });
   },
 
-  buyItem: function () {
-    event.preventDefault();
+  buyItem: function (id, price) {
 
     // retrieve the item price
-    var _itemId = $(event.target).data('id');
-    var _price = parseFloat($(event.target).data('value'));
+    var _itemId = id;
+    var _price = parseFloat(price);
 
     App.contracts.CryptoList.deployed().then(function (instance) {
       return instance.buyItem(_itemId, {
@@ -234,7 +243,7 @@ App = {
 };
 
 $(function () {
-  $(window).on("load", function (e) {
+  $(window).ready(function (e) {
     App.init();
   });
 });

@@ -4,6 +4,13 @@ body {
   font-family: 'Courier New', Courier, monospace;
 }
 
+.previewContainer, .uploadedImage {
+  max-width: 200px;
+  max-height: 200px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
 .card {
   background: darkgrey !important;
   text-align: center;
@@ -51,7 +58,7 @@ body {
 #snackbar.show {
   visibility: visible; /* Show the snackbar */
 
-/* Add animation: Take 0.5 seconds to fade in and out the snackbar. 
+/* Add animation: Take 0.5 seconds to fade in and out the snackbar.
 However, delay the fade out process for 2.5 seconds */
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
@@ -59,7 +66,7 @@ However, delay the fade out process for 2.5 seconds */
 
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;} 
+  from {bottom: 0; opacity: 0;}
   to {bottom: 30px; opacity: 1;}
 }
 
@@ -69,7 +76,7 @@ However, delay the fade out process for 2.5 seconds */
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;} 
+  from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
 

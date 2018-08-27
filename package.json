@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/nvnt16/cryptolist#readme",
   "devDependencies": {
-    "lite-server": "^2.4.0"
+    "lite-server": "^2.4.0",
+    "truffle-privatekey-provider": "^0.1.0"
   }
-} 
+}
