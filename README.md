@@ -46,7 +46,7 @@ Install git to clone the repository:
 sudo apt-get install git
 ```
 
-Traverse to the ChanChain repository and install dependencies:
+Traverse to the CryptoList repository and install dependencies:
 ```
 npm install
 ```
@@ -69,7 +69,7 @@ On the project directory you have to execute:
 truffle develop
 ```
 
-You can also copy the ChanChain.sol contract code and paste it in Remix. After that you can compile and test the contract in the truffle console:
+You can also copy the CryptoList.sol contract code and paste it in Remix. After that you can compile and test the contract in the truffle console:
 ```
 compile
 migrate --reset
